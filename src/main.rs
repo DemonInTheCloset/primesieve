@@ -58,6 +58,10 @@ fn sieve<const LIMIT: usize>() -> Vec<u64> {
         }
     }
 
+    // π(x) ~ x/ln(x)
+    // let approx_count = ((2 * LIMIT) as f64 / (2.0 * LIMIT as f64).ln()) as usize;
+    // let mut primes = Vec::with_capacity(approx_count);
+    // primes.push(2);
     let mut primes = vec![2];
 
     for ix in 0..LIMIT {
@@ -82,12 +86,20 @@ mod benchmarks {
     use crate::sieve;
 
     #[bench]
-    fn bench_1m_primes(b: &mut Bencher) {
+    /// 10.000 primes
+    fn bench_small_primes(b: &mut Bencher) {
+        b.iter(|| test::black_box(sieve::<10000>()))
+    }
+
+    #[bench]
+    /// 1.000.000 primes
+    fn bench_medium_primes(b: &mut Bencher) {
         b.iter(|| test::black_box(sieve::<1000000>()))
     }
 
     #[bench]
-    fn bench_10m_primes(b: &mut Bencher) {
-        b.iter(|| test::black_box(sieve::<10000000>()))
+    /// 100.000.000 primes
+    fn bench_large_primes(b: &mut Bencher) {
+        b.iter(|| test::black_box(sieve::<100000000>()))
     }
 }
